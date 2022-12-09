@@ -7,12 +7,23 @@ function App() {
   const showCart = useSelector( state => state.ui.isCartVisible);
   const cart = useSelector(state => state.cart);
   useEffect(()=>{
-    console.log('in UE');
-    fetch('https://movie-http-c62a0-default-rtdb.firebaseio.com/cart.json',{
+    const sendCardData = async () => {
+    const response = await fetch('https://movie-http-c62a0-default-rtdb.firebaseio.com/cart.json',{
       method: 'PUT',
       body: JSON.stringify(cart),
-    },[cart]);
-  });
+    });
+
+    if( !response.ok){
+      throw new Error('Sending card Data Failed.');
+    }
+
+    const responseData = await response.json();
+    console.log('>>>>>>',responseData);
+  };
+    
+    sendCardData();
+    
+  },[cart]);
   return (
     <Layout>
     { showCart && <Cart />}
